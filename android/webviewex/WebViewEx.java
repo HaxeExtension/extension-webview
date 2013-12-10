@@ -26,7 +26,7 @@ public class WebViewEx{
 	public static String url;
 	public static boolean withPopup;
 	
-	public static void APIInit(HaxeObject _haxeListenerClass, boolean withPopup)
+	public static void APIInit(final HaxeObject _haxeListenerClass, boolean withPopup)
 	{
 		Log.d("WebViewEx","APIInit");
 
@@ -34,7 +34,6 @@ public class WebViewEx{
 		
 		WebViewEx.HaxeListenerClass = _haxeListenerClass;
 		WebViewEx.withPopup=withPopup;
-		View view;
 		
 		GameActivity.getInstance().runOnUiThread(new Runnable() {public void run() { 
 			WebView webView = new WebView(GameActivity.getContext());
@@ -113,16 +112,15 @@ public class WebViewEx{
 	public static void APIDestroy()
 	{
 		Log.d("WebViewEx","APIDestroy");
-		WebViewEx.HaxeListenerClass.call0("onDestroyed");
-		
 		if(WebViewEx.webView != null) {
 			GameActivity.getInstance().runOnUiThread(new Runnable() {public void run() { 
+				WebViewEx.HaxeListenerClass.call0("onDestroyed");
 				WebViewEx.webView.stopLoading();
 				WebViewEx.webView.destroy();
 				GameActivity.popView();
+				WebViewEx.webView = null;
+				WebViewEx.HaxeListenerClass = null;
 			}});
 		}
-		WebViewEx.webView = null;
-		WebViewEx.HaxeListenerClass = null;
 	}
 }
