@@ -72,7 +72,6 @@ public class WebViewEx{
 				
 				DisplayMetrics metrics = new DisplayMetrics();
 				GameActivity.getInstance().getWindowManager().getDefaultDisplay().getMetrics(metrics);
-				// Log.d("NME", ""+ metrics.densityDpi);
 				
 				String dpi = "mdpi"; // DisplayMetrics.DENSITY_DEFAULT || DisplayMetrics.DENSITY_MEDIUM
 				if(metrics.densityDpi == DisplayMetrics.DENSITY_LOW) {
@@ -83,7 +82,7 @@ public class WebViewEx{
 					dpi = "xhdpi";
 				}
 				
-				byte[] closeBytes = GameActivity.getResource("extensions_webview_assets_close_"+ dpi +"_png");
+				byte[] closeBytes = GameActivity.getResource("assets/extensions_webview_close_"+ dpi +".png");
 				closeImageView.setImageBitmap(BitmapFactory.decodeByteArray(closeBytes, 0, closeBytes.length));
 				int margin = closeImageView.getDrawable().getIntrinsicWidth() / 2;
 				
