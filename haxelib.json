@@ -1,0 +1,10 @@
+{
+        "name": "webviewex",
+        "url": "https://github.com/fbricker/webviewex",
+        "license": "GPL",
+        "contributors":["fbricker"],
+        "tags": ["webview","api","android", "ios"],
+        "description": "WebView / OpenFL extension for Android + iOS.",
+        "version": "0.0.1",
+        "releasenote": "First release. Works!"
+}

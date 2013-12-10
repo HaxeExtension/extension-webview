@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension>
+	<assets path="assets/" include="*" />
+	<java path="project/android" if="android" />
+	<dependency name="UIKit.framework" if="ios"/>
+	<ndll name="webviewex" if="ios" />
+</extension>
+
