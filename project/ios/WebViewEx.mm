@@ -25,14 +25,14 @@ typedef void (*OnCloseClickedFunctionType)();
 
 namespace webviewex {
 	UIWebView *instance;
-    UIButton *closeButton;
+	UIButton *closeButton;
 	WebViewDelegate *webViewDelegate;
 	AutoGCRoot *onDestroyedCallback = 0;
 	AutoGCRoot *onURLChangingCallback = 0;
 	void init(value, value, bool);
-    void navigate(const char *);
-    void destroy();
-    void onUrlChanging(NSString *);
+	void navigate(const char *);
+	void destroy();
+	void onUrlChanging(NSString *);
     
 	void init(value _onDestroyedCallback, value _onURLChangingCallback, bool withPopup) {
 		if(instance != nil) destroy();
@@ -55,24 +55,22 @@ namespace webviewex {
             padding = 59;
         }
         
-        padding /= 2;
+        padding /= 4;
         if(!withPopup) padding = 0;
         
-		instance = [[UIWebView alloc] initWithFrame:CGRectMake(padding, padding, screen.size.width - (padding * 2), screen.size.height - (padding * 2))];
+        instance = [[UIWebView alloc] initWithFrame:CGRectMake(padding, padding, screen.size.width - (padding * 2), screen.size.height - (padding * 2))];
 		instance.delegate = webViewDelegate;
-        
+
 		[[[UIApplication sharedApplication] keyWindow] addSubview:instance];
 		
         if (withPopup) {
-            UIImage *closeImage = [[UIImage alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource: [NSString stringWithFormat:@"assets/assets_extensions_webview_close_%@_png", dpi] ofType: nil]];
-            
-            closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-            [closeButton setImage:closeImage forState:UIControlStateNormal];
-            closeButton.adjustsImageWhenHighlighted = NO;
-            closeButton.frame = CGRectMake(0, 0, padding * 2, padding * 2);
-            [closeButton addTarget:webViewDelegate action:@selector(onCloseButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-            
-            [[[UIApplication sharedApplication] keyWindow] addSubview:closeButton];
+        	UIImage *closeImage = [[UIImage alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource: [NSString stringWithFormat:@"assets/assets_extensions_webview_close_%@_png", dpi] ofType: nil]];
+			closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+			[closeButton setImage:closeImage forState:UIControlStateNormal];
+			closeButton.adjustsImageWhenHighlighted = NO;
+			closeButton.frame = CGRectMake(0, 0, padding*2, padding*2);
+			[closeButton addTarget:webViewDelegate action:@selector(onCloseButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
+			[[[UIApplication sharedApplication] keyWindow] addSubview:closeButton];
         }
 	}
     
@@ -81,21 +79,17 @@ namespace webviewex {
 		NSURLRequest *req = [[NSURLRequest alloc] initWithURL:_url];
 		[instance loadRequest:req];
 	}
-	
-	void destroy () {
-        val_call0(onDestroyedCallback->get());
-		
+
+	void destroy(){
+		if(instance==nil) return;
+		val_call0(onDestroyedCallback->get());
 		[instance stopLoading];
 		[instance removeFromSuperview];
+		if(closeButton != nil) {
+			[closeButton removeFromSuperview];
+		}
 		[instance release];
-		instance = nil;
-		[webViewDelegate release];
-		webViewDelegate = nil;
-        
-        if(closeButton != nil) {
-            [closeButton release];
-            closeButton = nil;
-        }
+		instance=nil;
 	}
 	
 	void onUrlChanging (NSString *url) {

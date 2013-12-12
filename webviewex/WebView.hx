@@ -5,13 +5,36 @@ class WebView  {
 	private static var APIInit:Dynamic=null;
 	private static var APINavigate:Dynamic=null;
 	private static var APIDestroy:Dynamic=null;
-
 	private static var listener:WebViewListener;
 	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	public static var onDestroyed:Void->Void=null;
 	public static var onURLChanging:String->Void=null;
-		
-	private static function checkAPI():Void {
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	public static function open(url:String=null, withPopup:Bool = false):Void {
+		if (listener == null) listener = new WebViewListener();
+		APICall("init", [listener, withPopup]);
+		navigate(url);
+	}
+	
+	public static function navigate(url:String):Void {
+		if (url==null) return;
+		if (listener != null) APICall("navigate", [url]);
+	}
+	
+	public static function close():Void {
+		if (listener != null) APICall("destroy");
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	private static function init():Void {
 		if(APIInit != null) return;
 		try{
 			#if android
@@ -29,7 +52,7 @@ class WebView  {
 	}
 	
 	private static function APICall(method:String, args:Array<Dynamic> = null):Void	{
-		checkAPI();
+		init();
 		try{
 			#if android
             if (method == "init") APIInit(args[0], args[1] == true);
@@ -45,27 +68,14 @@ class WebView  {
 		}
 	}
 	
-	public static function init(withPopup:Bool = false):Void {
-		if (listener == null) {
-			listener = new WebViewListener();
-			APICall("init", [listener, withPopup]);
-		}
-	}
-	
-	public static function navigate(url:String):Void {
-		if (listener == null) init();
-		APICall("navigate", [url]);
-	}
-	
-	public static function destroy():Void {
-		if (listener != null) APICall("destroy");
-	}
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class WebViewListener {
 
-	public function new() {
-	}
+	public function new() {}
 	
 	public function onDestroyed():Void {
 		if(WebView.onDestroyed!=null) WebView.onDestroyed();
