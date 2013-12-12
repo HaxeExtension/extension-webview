@@ -3,8 +3,10 @@ package webviewex;
 class WebView  {
 
 	private static var APIInit:Dynamic=null;
+	private static var APISetCallback:Dynamic=null;
 	private static var APINavigate:Dynamic=null;
 	private static var APIDestroy:Dynamic=null;
+	public static var APILastURL(default,null):Void->String=null;
 	private static var listener:WebViewListener;
 	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,7 +19,10 @@ class WebView  {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public static function open(url:String=null, withPopup:Bool = false):Void {
-		if (listener == null) listener = new WebViewListener();
+		if (listener == null) {
+			listener = new WebViewListener();
+			APICall("callback", [listener]);
+		}
 		APICall("init", [listener, withPopup]);
 		navigate(url);
 	}
@@ -39,7 +44,9 @@ class WebView  {
 		try{
 			#if android
 			APIDestroy  = openfl.utils.JNI.createStaticMethod("webviewex/WebViewEx", "APIDestroy", "()V");
-			APIInit     = openfl.utils.JNI.createStaticMethod("webviewex/WebViewEx", "APIInit", "(Lorg/haxe/nme/HaxeObject;Z)V");
+			APIInit     = openfl.utils.JNI.createStaticMethod("webviewex/WebViewEx", "APIInit", "(Z)V");
+			APISetCallback = openfl.utils.JNI.createStaticMethod("webviewex/WebViewEx", "APISetCallback", "(Lorg/haxe/nme/HaxeObject;)V");
+			APILastURL  = openfl.utils.JNI.createStaticMethod("webviewex/WebViewEx", "APILastURL", "()Ljava/lang/String;");
 			APINavigate = openfl.utils.JNI.createStaticMethod("webviewex/WebViewEx", "APINavigate", "(Ljava/lang/String;)V");
 			#elseif ios
             APIInit     = cpp.Lib.load("webviewex","webviewAPIInit", 3);
@@ -55,7 +62,8 @@ class WebView  {
 		init();
 		try{
 			#if android
-            if (method == "init") APIInit(args[0], args[1] == true);
+            if (method == "init") APIInit(args[1] == true);
+            if (method == "callback") APISetCallback(args[0]);
             if (method == "navigate") APINavigate(args[0]);
             if (method == "destroy") APIDestroy();
 			#elseif iphone
@@ -81,7 +89,13 @@ class WebViewListener {
 		if(WebView.onDestroyed!=null) WebView.onDestroyed();
 	}
 	
-	public function onURLChanging(url:String):Void {
-		if(WebView.onURLChanging!=null) WebView.onURLChanging(url);
+	public function onURLChanging(url:Dynamic):Void {
+		if(WebView.onURLChanging!=null) {
+			if(WebView.APILastURL==null){
+				WebView.onURLChanging(url);
+			}else{
+				WebView.onURLChanging(WebView.APILastURL());
+			}
+		}
 	}
 }

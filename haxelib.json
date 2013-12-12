@@ -5,6 +5,6 @@
         "contributors":["fbricker"],
         "tags": ["webview","api","android", "ios"],
         "description": "WebView / OpenFL extension for Android + iOS.",
-        "version": "0.0.1",
+        "version": "0.1.0",
         "releasenote": "First release. Works!"
 }

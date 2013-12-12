@@ -20,31 +20,42 @@ import org.haxe.nme.HaxeObject;
 
 public class WebViewEx{
 	
-	public static HaxeObject HaxeListenerClass;
-	public static View view;
+	public static HaxeObject haxeListenerClass;
 	public static WebView webView;
+	public static View view;
 	public static String url;
+	public static ImageView closeImageView;
+	public static FrameLayout contentFrameLayout;
+	public static LinearLayout webViewContainer;
 	public static boolean withPopup;
+
+	public static void APISetCallback(HaxeObject _haxeListenerClass){
+		WebViewEx.haxeListenerClass = _haxeListenerClass;
+	}
+
+	private static String APILastURL(){
+		return url;
+	}
 	
-	public static void APIInit(final HaxeObject _haxeListenerClass, boolean withPopup)
+	public static void APIInit(boolean withPopup)
 	{
 		Log.d("WebViewEx","APIInit");
-
 		if(WebViewEx.webView != null) WebViewEx.APIDestroy();
-		
-		WebViewEx.HaxeListenerClass = _haxeListenerClass;
 		WebViewEx.withPopup=withPopup;
 		
 		GameActivity.getInstance().runOnUiThread(new Runnable() {public void run() { 
-			WebView webView = new WebView(GameActivity.getContext());
-			webView.setVerticalScrollBarEnabled(false);
-	        webView.setHorizontalScrollBarEnabled(false);
-			webView.setWebViewClient(new WebViewClient() {
+			
+			WebViewEx.webView = new WebView(GameActivity.getContext());
+			WebViewEx.view = null;
+			WebViewEx.webView.setVerticalScrollBarEnabled(false);
+	        WebViewEx.webView.setHorizontalScrollBarEnabled(false);
+			WebViewEx.webView.setWebViewClient(new WebViewClient() {
 				@Override
 				public boolean shouldOverrideUrlLoading(WebView view, String url) {
-					WebViewEx.HaxeListenerClass.call1("onURLChanging", url);
-					view.loadUrl(url);
-					
+					WebViewEx.url=url;
+					Log.d("WebViewEx","onURLChanging: "+url);
+					WebViewEx.haxeListenerClass.call1("onURLChanging", url);
+					view.loadUrl(WebViewEx.url);
 					return true;
 				}
 			});
@@ -55,14 +66,11 @@ public class WebViewEx{
 			webSettings.setJavaScriptEnabled(true);
 			webSettings.setSupportZoom(false);
 			
-			WebViewEx.webView = webView;
-			WebViewEx.view = WebViewEx.webView;
-			
 			if(WebViewEx.withPopup) {
-				webView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+				WebViewEx.webView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 				
-				ImageView closeImageView = new ImageView(GameActivity.getContext());
-				closeImageView.setOnClickListener(new View.OnClickListener() {
+				WebViewEx.closeImageView = new ImageView(GameActivity.getContext());
+				WebViewEx.closeImageView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						WebViewEx.APIDestroy();
@@ -82,21 +90,22 @@ public class WebViewEx{
 				}
 				
 				byte[] closeBytes = GameActivity.getResource("assets/extensions_webview_close_"+ dpi +".png");
-				closeImageView.setImageBitmap(BitmapFactory.decodeByteArray(closeBytes, 0, closeBytes.length));
+				WebViewEx.closeImageView.setImageBitmap(BitmapFactory.decodeByteArray(closeBytes, 0, closeBytes.length));
 				int margin = closeImageView.getDrawable().getIntrinsicWidth() / 2;
 				
-				LinearLayout webViewContainer = new LinearLayout(GameActivity.getContext());
-				webViewContainer.setPadding(margin, margin, margin, margin);
-				webViewContainer.addView(webView);
+				WebViewEx.webViewContainer = new LinearLayout(GameActivity.getContext());
+				WebViewEx.webViewContainer.setPadding(margin, margin, margin, margin);
+				WebViewEx.webViewContainer.addView(WebViewEx.webView);
 				
-				FrameLayout contentFrameLayout = new FrameLayout(GameActivity.getContext());
-				contentFrameLayout.setBackgroundColor(Color.TRANSPARENT);
-				contentFrameLayout.addView(webViewContainer);
+				WebViewEx.contentFrameLayout = new FrameLayout(GameActivity.getContext());
+				WebViewEx.contentFrameLayout.setBackgroundColor(Color.TRANSPARENT);
+				WebViewEx.contentFrameLayout.addView(WebViewEx.webViewContainer);
 				
-				contentFrameLayout.addView(closeImageView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-				WebViewEx.view = contentFrameLayout;
+				WebViewEx.contentFrameLayout.addView(WebViewEx.closeImageView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+				WebViewEx.view=contentFrameLayout;
+			}else{
+				WebViewEx.view=WebViewEx.webView;
 			}
-			
 			GameActivity.pushView(WebViewEx.view);
 		}});
 	}
@@ -109,17 +118,20 @@ public class WebViewEx{
 		}});
 	}
 	
-	public static void APIDestroy()
-	{
+	public static void APIDestroy() {
 		Log.d("WebViewEx","APIDestroy");
-		if(WebViewEx.webView != null) {
+		if(WebViewEx.view != null) {
 			GameActivity.getInstance().runOnUiThread(new Runnable() {public void run() { 
-				WebViewEx.HaxeListenerClass.call0("onDestroyed");
+				WebViewEx.haxeListenerClass.call0("onDestroyed");
 				WebViewEx.webView.stopLoading();
-				WebViewEx.webView.destroy();
 				GameActivity.popView();
+				WebViewEx.closeImageView=null;
+				WebViewEx.webViewContainer=null;
+				WebViewEx.contentFrameLayout=null;
+				WebViewEx.view=null;
+				WebViewEx.webView.destroy();
 				WebViewEx.webView = null;
-				WebViewEx.HaxeListenerClass = null;
+				Log.d("WebViewEx","APIDestroyed");
 			}});
 		}
 	}
