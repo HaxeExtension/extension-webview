@@ -5,6 +5,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.view.KeyEvent;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -29,16 +30,15 @@ public class WebViewEx{
 	public static LinearLayout webViewContainer;
 	public static boolean withPopup;
 
-	public static void APISetCallback(HaxeObject _haxeListenerClass){
+	public static void APISetCallback(HaxeObject _haxeListenerClass) {
 		WebViewEx.haxeListenerClass = _haxeListenerClass;
 	}
 
-	private static String APILastURL(){
+	public static String APILastURL() {
 		return url;
 	}
 	
-	public static void APIInit(boolean withPopup)
-	{
+	public static void APIInit(boolean withPopup) {
 		Log.d("WebViewEx","APIInit");
 		if(WebViewEx.webView != null) WebViewEx.APIDestroy();
 		WebViewEx.withPopup=withPopup;
@@ -46,6 +46,15 @@ public class WebViewEx{
 		GameActivity.getInstance().runOnUiThread(new Runnable() {public void run() { 
 			
 			WebViewEx.webView = new WebView(GameActivity.getContext());
+
+			webView.setOnKeyListener(new OnKeyListener(){
+				@Override
+				public boolean onKey(View v, int keyCode, KeyEvent event) {
+					Log.d("WebViewEx","TECLAAA!");
+					return true;
+				}
+			});
+
 			WebViewEx.view = null;
 			WebViewEx.webView.setVerticalScrollBarEnabled(false);
 	        WebViewEx.webView.setHorizontalScrollBarEnabled(false);
@@ -54,7 +63,7 @@ public class WebViewEx{
 				public boolean shouldOverrideUrlLoading(WebView view, String url) {
 					WebViewEx.url=url;
 					Log.d("WebViewEx","onURLChanging: "+url);
-					WebViewEx.haxeListenerClass.call1("onURLChanging", url);
+					if(WebViewEx.haxeListenerClass!=null) WebViewEx.haxeListenerClass.call1("onURLChanging", url);
 					view.loadUrl(WebViewEx.url);
 					return true;
 				}
@@ -107,6 +116,7 @@ public class WebViewEx{
 				WebViewEx.view=WebViewEx.webView;
 			}
 			GameActivity.pushView(WebViewEx.view);
+			WebViewEx.view.requestFocus();
 		}});
 	}
 	
@@ -122,7 +132,7 @@ public class WebViewEx{
 		Log.d("WebViewEx","APIDestroy");
 		if(WebViewEx.view != null) {
 			GameActivity.getInstance().runOnUiThread(new Runnable() {public void run() { 
-				WebViewEx.haxeListenerClass.call0("onDestroyed");
+				if(WebViewEx.haxeListenerClass!=null) WebViewEx.haxeListenerClass.call0("onDestroyed");
 				WebViewEx.webView.stopLoading();
 				GameActivity.popView();
 				WebViewEx.closeImageView=null;
