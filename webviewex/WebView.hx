@@ -21,7 +21,8 @@ class WebView  {
 	public static function open(url:String=null, withPopup:Bool = false):Void {
 		if (listener == null) {
 			listener = new WebViewListener();
-			APICall("callback", [listener]);
+			//Disable this on Android since AdMob Extension conflicts and I don't know why
+			//APICall("callback", [listener]);
 		}
 		APICall("init", [listener, withPopup]);
 		navigate(url);

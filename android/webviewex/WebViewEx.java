@@ -47,11 +47,18 @@ public class WebViewEx{
 			
 			WebViewEx.webView = new WebView(GameActivity.getContext());
 
-			webView.setOnKeyListener(new OnKeyListener(){
+			WebViewEx.webView.setOnKeyListener(new OnKeyListener(){
 				@Override
 				public boolean onKey(View v, int keyCode, KeyEvent event) {
-					Log.d("WebViewEx","TECLAAA!");
-					return true;
+					if(keyCode==KeyEvent.KEYCODE_BACK){
+						if(WebViewEx.webView.canGoBack()){
+							WebViewEx.webView.goBack();
+						}else{
+							WebViewEx.APIDestroy();
+						}
+						return true;
+					}
+					return false;
 				}
 			});
 
