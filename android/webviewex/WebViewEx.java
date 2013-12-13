@@ -37,6 +37,10 @@ public class WebViewEx{
 	public static String APILastURL() {
 		return url;
 	}
+
+	public static boolean APIIsDisplaying() {
+		return WebViewEx.webView!=null;
+	}
 	
 	public static void APIInit(boolean withPopup) {
 		Log.d("WebViewEx","APIInit");
