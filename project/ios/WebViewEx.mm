@@ -60,6 +60,7 @@ namespace webviewex {
         
         instance = [[UIWebView alloc] initWithFrame:CGRectMake(padding, padding, screen.size.width - (padding * 2), screen.size.height - (padding * 2))];
 		instance.delegate = webViewDelegate;
+		instance.scalesPageToFit=YES;
 
 		[[[UIApplication sharedApplication] keyWindow] addSubview:instance];
 		
