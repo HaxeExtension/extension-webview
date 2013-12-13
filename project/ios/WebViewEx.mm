@@ -48,7 +48,7 @@ namespace webviewex {
         CGFloat screenScale = [[UIScreen mainScreen] scale];
         
         NSString *dpi = @"mdpi";
-        int padding = 29;
+        int padding = 58;
         
         if(screenScale > 1.0) {
             dpi = @"xhdpi";
