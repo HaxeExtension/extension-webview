@@ -16,8 +16,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
-import org.haxe.nme.GameActivity;
-import org.haxe.nme.HaxeObject;
+import org.haxe.lime.GameActivity;
+import org.haxe.lime.HaxeObject;
 
 public class WebViewEx{
 	
