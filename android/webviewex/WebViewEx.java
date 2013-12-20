@@ -146,6 +146,7 @@ public class WebViewEx{
 				if(WebViewEx.haxeListenerClass!=null) WebViewEx.haxeListenerClass.call0("onDestroyed");
 				WebViewEx.webView.stopLoading();
 				GameActivity.popView();
+				((View)GameActivity.getMainView()).requestFocus();
 				WebViewEx.closeImageView=null;
 				WebViewEx.webViewContainer=null;
 				WebViewEx.contentFrameLayout=null;

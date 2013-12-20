@@ -70,7 +70,13 @@ class WebView  {
 		init();
 		try{
 			#if android
-            if (method == "init") APIInit(args[1] == true);
+			if (method == "init") {
+				try {
+					APIInit(args[1] == true);
+				} catch (e :Dynamic) {
+					APIInit(args[1] == true);
+				}
+			}
             if (method == "callback") APISetCallback(args[0]);
             if (method == "navigate") APINavigate(args[0]);
             if (method == "destroy") APIDestroy();
@@ -79,8 +85,8 @@ class WebView  {
             if (method == "navigate") APINavigate(args[0]);
             if (method == "destroy") APIDestroy();
 			#end
-		}catch(e:Dynamic){
-			trace("APICall Exception: "+e);
+		} catch(e:Dynamic) {
+			trace("APICall Exception [" + method + ", " + args + "]: "+e);
 		}
 	}
 	
