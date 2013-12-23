@@ -1,6 +1,7 @@
 package webviewex;
 
 import android.util.Log;
+/*
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -16,12 +17,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.graphics.Color;
 import android.util.DisplayMetrics;
+import android.os.Bundle;
 import org.haxe.lime.GameActivity;
 import org.haxe.lime.HaxeObject;
+import org.haxe.extension.Extension;
+*/
 
-public class WebViewEx{
+public class WebViewActivity extends Activity {
+
+	/*
 	
-	public static HaxeObject haxeListenerClass;
 	public static WebView webView;
 	public static View view;
 	public static String url;
@@ -29,20 +34,10 @@ public class WebViewEx{
 	public static FrameLayout contentFrameLayout;
 	public static LinearLayout webViewContainer;
 	public static boolean withPopup;
-
-	public static void APISetCallback(HaxeObject _haxeListenerClass) {
-		WebViewEx.haxeListenerClass = _haxeListenerClass;
-	}
-
-	public static String APILastURL() {
-		return url;
-	}
-
-	public static boolean APIIsDisplaying() {
-		return WebViewEx.webView!=null;
-	}
+	private static Extension extension;
+	private static boolean shouldBeVisible = false;
 	
-	public static void APIInit(boolean withPopup) {
+	public void init() {
 		Log.d("WebViewEx","APIInit");
 		if(WebViewEx.webView != null) WebViewEx.APIDestroy();
 		WebViewEx.withPopup=withPopup;
@@ -126,9 +121,88 @@ public class WebViewEx{
 			}else{
 				WebViewEx.view=WebViewEx.webView;
 			}
-			GameActivity.pushView(WebViewEx.view);
-			WebViewEx.view.requestFocus();
+
 		}});
+
+		if (extension == null) {
+
+			extension = new Extension() {
+
+				@Override
+				public void onCreate(Bundle _) {
+					Log.d("WebViewEx", "onStart");
+					WebViewEx.onCreate();
+				}
+
+				@Override
+				public void onDestroy() {
+					Log.d("WebViewEx", "onPause");
+					WebViewEx.onDestroy();
+				}
+
+			};
+
+			GameActivity.registerExtension (extension);
+		}
+		
+		shouldBeVisible = true;
+		
+		onCreate();
+
+	}
+
+	private static void onDestroy() {
+		if (shouldBeVisible) {
+			Log.d("WebView", "onStop(). shouldBeVisible = true. Removing view...");
+			
+			GameActivity.getInstance().runOnUiThread(
+
+				new Runnable () {
+
+					public void run () {
+
+						try {
+							
+							ViewGroup parent = (ViewGroup) WebViewEx.view.getParent();
+							
+							if (parent != null) {
+
+								Log.d("WebViewEx", "ChildCount: " + parent.getChildCount());
+								parent.removeView ( WebViewEx.view );
+
+							}
+
+						} catch (ClassCastException ex) {
+							
+							Log.wtf("WebViewEx", 
+								"view.getParent() is an instance of " + WebViewEx.view.getParent().getClass().getName() +
+								" which is not a subclass of ViewGroup. Aborting redraw.");
+							return;
+
+						}
+					}
+				}
+			);
+		}
+	}
+
+	private static void onCreate() {
+		if (shouldBeVisible) {
+			Log.d("WebView", "onStart(). shouldBeVisible = true. Adding view...");
+
+			GameActivity.getInstance().runOnUiThread(
+				new Runnable () {
+
+					public void run () {
+
+						GameActivity.pushView(WebViewEx.view);
+						WebViewEx.view.requestFocus();
+
+					}
+
+				}
+			);
+		}
 	}
 	
 	public static void APINavigate(String url) {
@@ -141,6 +215,7 @@ public class WebViewEx{
 	
 	public static void APIDestroy() {
 		Log.d("WebViewEx","APIDestroy");
+		shouldBeVisible = false;
 		if(WebViewEx.view != null) {
 			GameActivity.getInstance().runOnUiThread(new Runnable() {public void run() { 
 				if(WebViewEx.haxeListenerClass!=null) WebViewEx.haxeListenerClass.call0("onDestroyed");
@@ -157,4 +232,7 @@ public class WebViewEx{
 			}});
 		}
 	}
+
+	*/
+
 }

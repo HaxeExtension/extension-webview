@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="webviewex">
+	<application android:debuggable="::DEBUG::">
+		<activity android:name="webviewex.WebViewActivity" android:configChanges="keyboard|keyboardHidden|orientation|screenSize"/>
+	</application>
+</manifest>
