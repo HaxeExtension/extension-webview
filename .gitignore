@@ -2,3 +2,4 @@ project/obj
 webviewex.zip
 *.sublime-project
 *.sublime-workspace
+*.DS_Store
