@@ -3,12 +3,12 @@
 	<assets path="assets/" include="*" />
 	
 	<section if="android">
-		<dependency name="webviewex" path="dependencies/webviewex" />
+		<dependency name="webview" path="dependencies/webview" />
 	</section>
 
 	<section if="ios">
 		<dependency name="UIKit.framework" />
-		<ndll name="webviewex" />
+		<ndll name="webview" />
 	</section>
 
 </extension>
