@@ -1,6 +1,5 @@
 package extensions.webview;
 
-import java.util.ArrayList;
 import java.util.regex.PatternSyntaxException;
 
 import android.os.Bundle;
@@ -23,8 +22,8 @@ public class WebViewActivity extends Activity {
 	
 	protected String url;
 	protected boolean floating;
-	protected ArrayList<String> urlWhitelist;
-	protected ArrayList<String> urlBlacklist;
+	protected String[] urlWhitelist;
+	protected String[] urlBlacklist;
 	
 	protected int layoutResource;
 
@@ -36,8 +35,8 @@ public class WebViewActivity extends Activity {
 		// Load parameters from intent
 		url = getIntent().getExtras().getString(WebViewExtension.EXTRA_URL);
 		floating = getIntent().getExtras().getBoolean(WebViewExtension.EXTRA_FLOATING);
-		urlWhitelist = getIntent().getExtras().getStringArrayList(WebViewExtension.EXTRA_URL_WHITELIST);
-		urlBlacklist = getIntent().getExtras().getStringArrayList(WebViewExtension.EXTRA_URL_BLACKLIST);
+		urlWhitelist = getIntent().getExtras().getStringArray(WebViewExtension.EXTRA_URL_WHITELIST);
+		urlBlacklist = getIntent().getExtras().getStringArray(WebViewExtension.EXTRA_URL_BLACKLIST);
 
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
@@ -45,9 +44,6 @@ public class WebViewActivity extends Activity {
 			layoutResource = R.layout.activity_web_view_floating;
 		else
 			layoutResource = R.layout.activity_web_view_fullscreen;
-		
-		Log.d("WebViewActivity", "using layout" + layoutResource);
-		Log.d("WebViewActivity", "where fs:" + R.layout.activity_web_view_fullscreen + " fl:" + R.layout.activity_web_view_floating);
 		
 		// Initialize the UI
 		initUI();
@@ -81,12 +77,14 @@ public class WebViewActivity extends Activity {
 						
 						Log.d(TAG, "shouldOverrideUrlLoading(): url = " + url);
 						
-						
-						
 						if (WebViewActivity.this.urlWhitelist == null) {
 							
 							Log.d(TAG, "urlWhitelist is null");
 							
+						} else if (WebViewActivity.this.urlWhitelist.length == 0) {
+
+							Log.d(TAG, "urlWhitelist is empty");
+
 						} else {
 							
 							boolean whitelisted = false;
@@ -143,7 +141,6 @@ public class WebViewActivity extends Activity {
 								Log.e(TAG, "Regular expression '" + blacklistedUrl + "' is not valid.");
 								
 							}
-
 							
 						}
 						
@@ -165,6 +162,9 @@ public class WebViewActivity extends Activity {
 	@Override
 	public void onConfigurationChanged(Configuration newConfig)
 	{
+
+		Log.d(TAG, "onConfigurationChanged (newConfig = " + newConfig.toString() + ")");
+		
 		if (webView != null)
 		{
 			// Remove the WebView from the old placeholder

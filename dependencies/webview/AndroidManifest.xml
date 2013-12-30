@@ -6,7 +6,7 @@
         <activity
             android:name="extensions.webview.WebViewActivity"
             android:theme="@style/FloatingActivityTheme"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|smallestScreenSize" />
 
     </application>
 

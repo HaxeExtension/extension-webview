@@ -15,9 +15,8 @@ class WebView {
 	 * patterns in urlWhitelist. If it doesn't match any, the web view will
 	 * exit and onClose handler will be called with
 	 * reason = "NAVIGATION_NOT_WHITELISTED".
-	 * If urlWhitelist is an empty array, the web view will close
-	 * immediately after your call to open().
-	 * If urlWhitelist is null, any page will pass the whitelist check.
+	 * If urlWhitelist is an empty array or null, any page will pass the
+	 * whitelist check.
 	 *
 	 * If urlBlacklist is provided, every time a new URL passes the
 	 * whitelist check, it will be checked against all the regular
@@ -35,7 +34,7 @@ class WebView {
 
 		 init();
 
-		 _open();
+		 _open(url, floating, urlWhitelist, urlBlacklist);
 
 	}
 
@@ -46,8 +45,8 @@ class WebView {
 
 	private static var initialized :Bool = false;
 
-	// private static var _open :String -> Bool -> Array<String> -> Array<String> -> Void = null;
-	private static var _open :Void -> Void = null;
+	private static var _open :String -> Bool -> Array<String> -> Array<String> -> Void = null;
+	//private static var _open :String -> Bool -> Void = null;
 
 	// public static var onClose:Void->Void=null;
 	// public static var onURLChanging:String->Void=null;
@@ -59,7 +58,7 @@ class WebView {
 		if (! initialized) {
 
 			#if android
-			_open = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "open", "()V");
+			_open = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "open", "(Ljava/lang/String;Z[Ljava/lang/String;[Ljava/lang/String;)V");
 			#end
 
 			initialized = true;
