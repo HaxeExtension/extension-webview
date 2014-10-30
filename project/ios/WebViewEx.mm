@@ -65,7 +65,7 @@ namespace webviewex {
 		[[[UIApplication sharedApplication] keyWindow] addSubview:instance];
 		
         if (withPopup) {
-        	UIImage *closeImage = [[UIImage alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource: [NSString stringWithFormat:@"assets/assets__extensions_webview_close_%@_png", dpi] ofType: nil]];
+        	UIImage *closeImage = [[UIImage alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource: [NSString stringWithFormat:@"assets/assets/extensions_webview_close_%@.png", dpi] ofType: nil]];
 			closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			[closeButton setImage:closeImage forState:UIControlStateNormal];
 			closeButton.adjustsImageWhenHighlighted = NO;
