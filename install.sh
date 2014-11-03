@@ -1,5 +1,5 @@
 #!/bin/bash
 dir=`dirname "$0"`
 cd "$dir"
-haxelib remove webviewex
-haxelib local webviewex.zip
+haxelib remove openfl-webview
+haxelib local openfl-webview.zip
