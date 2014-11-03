@@ -1,15 +1,13 @@
 openfl-webview
 =======
 
-Native Webview extension for OpenFL
-
-This is a simple webview extension that pops up a WebView on iOS and Android outputs of OpenFL / Lime.
+A minimalistic OpenFL extension for displaying native WebViews on iOS and Android outputs.
 
 Main Features:
 =======
-* The popup has a close button on the top-left corner.
-* Allows you to set onClose and onURLChanging events.
-* It allows the code to specify a list of valid URLs to browse. If the webview tries to access an invalid URL, it'll automatically close.
+* Full-screen and Popup mode.
+* Popup mode has a close button on the top-left corner.
+* Allows you to receive onClose and onURLChanging events for controling the WebView.
 * On non-supported platforms, this extensions has no effect (makes nothing).
 
 Simple use Example:
