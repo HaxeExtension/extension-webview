@@ -1,4 +1,4 @@
-package exension.webview;
+package extension.webview;
 	
 class WebView  {
 
