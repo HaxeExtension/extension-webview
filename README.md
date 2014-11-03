@@ -3,14 +3,14 @@ openfl-webview
 
 A minimalistic OpenFL extension for displaying native WebViews on iOS and Android outputs.
 
-###Main Features:
+###Main Features
 
 * Full-screen and Popup mode.
 * Popup mode has a close button on the top-left corner.
 * Allows you to receive onClose and onURLChanging events for controling the WebView.
 * On non-supported platforms, this extensions has no effect (makes nothing).
 
-###Simple use Example:
+###Simple use Example
 
 ```haxe
 // This example show a simple sharing of a text using the Share Classs.
@@ -38,7 +38,7 @@ class SimpleExample {
 
 ```
 
-###How to Install:
+###How to Install
 
 
 ```bash
