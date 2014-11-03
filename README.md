@@ -7,10 +7,10 @@ This is a simple webview extension that pops up a WebView on iOS and Android out
 
 Main Features:
 =======
-The popup has a close button on the top-left corner.
-Allows you to set onClose and onURLChanging events.
-It allows the code to specify a list of valid URLs to browse. If the webview tries to access an invalid URL, it'll automatically close.
-On non-supported platforms, this extensions has no effect (makes nothing).
+* The popup has a close button on the top-left corner.
+* Allows you to set onClose and onURLChanging events.
+* It allows the code to specify a list of valid URLs to browse. If the webview tries to access an invalid URL, it'll automatically close.
+* On non-supported platforms, this extensions has no effect (makes nothing).
 
 Simple use Example:
 =======
