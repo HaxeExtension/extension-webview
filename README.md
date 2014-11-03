@@ -48,7 +48,7 @@ How to Install:
 haxelib install openfl-webview
 ```
 
-Licence
+License
 =======
 http://www.gnu.org/licenses/lgpl.html
 
