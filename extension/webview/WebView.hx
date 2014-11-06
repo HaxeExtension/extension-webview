@@ -2,15 +2,17 @@ package extension.webview;
 	
 class WebView  {
 
+	private static var initialized :Bool = false;
+
 	private static var APIInit:Dynamic=null;
 	private static var APISetCallback:Dynamic=null;
 	private static var APINavigate:Dynamic=null;
 	private static var APIDestroy:Dynamic=null;
-	#if android
-	public static var APILastURL(default,null):Void->String=null;
-	public static var APIIsDisplaying(default,null):Void->Bool=null;
-	#end
 	private static var listener:WebViewListener;
+
+	#if android
+	private static var _open :String -> Bool -> Array<String> -> Array<String> -> Void = null;
+	#end
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -21,18 +23,17 @@ class WebView  {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public static function open(url:String=null, withPopup:Bool = false):Void {
-		if (listener == null) {
-			listener = new WebViewListener();
-			//Disable this on Android since AdMob Extension conflicts and I don't know why
-			//APICall("callback", [listener]);
-		}
-		APICall("init", [listener, withPopup]);
-		navigate(url);
+	public static function open (url: String = null, floating :Bool = false, ?urlWhitelist :Array<String>, ?urlBlacklist :Array<String>) :Void {
+		init();
 		#if android
-		listener.poolingMode();
+			_open(url, floating, urlWhitelist, urlBlacklist);
+		#else
+			if (listener == null) listener = new WebViewListener();
+			APICall("init", [listener, floating]);
+			navigate(url);
 		#end
 	}
+
 	
 	public static function navigate(url:String):Void {
 		if (url==null) return;
@@ -47,15 +48,11 @@ class WebView  {
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	private static function init():Void {
-		if(APIInit != null) return;
+		if(initialized == true) return;
+		initialized = true;
 		try{
 			#if android
-			APIDestroy  = openfl.utils.JNI.createStaticMethod("webviewex/WebViewEx", "APIDestroy", "()V");
-			APIInit     = openfl.utils.JNI.createStaticMethod("webviewex/WebViewEx", "APIInit", "(Z)V");
-			APISetCallback = openfl.utils.JNI.createStaticMethod("webviewex/WebViewEx", "APISetCallback", "(Lorg/haxe/nme/HaxeObject;)V");
-			APILastURL  = openfl.utils.JNI.createStaticMethod("webviewex/WebViewEx", "APILastURL", "()Ljava/lang/String;");
-			APINavigate = openfl.utils.JNI.createStaticMethod("webviewex/WebViewEx", "APINavigate", "(Ljava/lang/String;)V");
-			APIIsDisplaying = openfl.utils.JNI.createStaticMethod("webviewex/WebViewEx", "APIIsDisplaying", "()Z");
+			_open = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "open", "(Ljava/lang/String;Z[Ljava/lang/String;[Ljava/lang/String;)V");
 			#elseif ios
             APIInit     = cpp.Lib.load("webviewex","webviewAPIInit", 3);
 			APINavigate = cpp.Lib.load("webviewex","webviewAPINavigate", 1);
@@ -97,11 +94,7 @@ class WebView  {
 
 class WebViewListener {
 
-	public function new() {
-		#if android
-		showing=false;
-		#end
-	}
+	public function new() {}
 	
 	public function onClose():Void {
 		if(WebView.onClose!=null) WebView.onClose();
@@ -110,39 +103,4 @@ class WebViewListener {
 	public function onURLChanging(url:Dynamic):Void {
 		if(WebView.onURLChanging!=null) WebView.onURLChanging(url);
 	}
-
-	#if android
-	public var showing:Bool;
-	private var lastUrl:String; 
-	public var opening:Bool;
-
-	public function poolingMode(){
-		if(showing) return;
-		showing=true;
-		opening=true;
-		lastUrl=null;
-		doPooling();
-	}
-
-	private function doPooling(){
-		if(opening){
-			opening=!WebView.APIIsDisplaying();
-			haxe.Timer.delay(doPooling,100);
-			return;
-		}
-
-		/*var url=WebView.APILastURL();
-		if(url!=lastUrl && lastUrl!=null){
-			onURLChanging(url);
-		}
-		lastUrl=url;*/
-
-		if(!WebView.APIIsDisplaying()){
-			onClose();
-			showing=false;
-		}else{
-			haxe.Timer.delay(doPooling,100);
-		}
-	}
-	#end
 }

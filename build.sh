@@ -3,4 +3,4 @@ dir=`dirname "$0"`
 cd "$dir"
 project/build.sh
 rm -f openfl-webview.zip
-zip -0r openfl-webview.zip extension android assets haxelib.json include.xml project ndll android 
+zip -0r openfl-webview.zip extension dependencies assets haxelib.json include.xml project ndll android 
