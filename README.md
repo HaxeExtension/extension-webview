@@ -7,7 +7,10 @@ A minimalistic OpenFL extension for displaying native WebViews on iOS and Androi
 
 * Full-screen and Popup mode.
 * Popup mode has a close button on the top-left corner.
-* Allows you to receive onClose and onURLChanging events for controling the WebView.
+* Whitelist validation (the webview will close if the user goes to a non-whitelisted URL).
+* Blacklist validation (the webview will close if the user goes to a blacklisted URL).
+* onClose event (Android and iOS).
+* onURLChanging events for controling the WebView (iOS only).
 * On non-supported platforms, this extensions has no effect (makes nothing).
 
 ###Simple use Example
@@ -24,7 +27,7 @@ class SimpleExample {
 	}
 
 	function onClose(){
-		trace("CLOSE!");
+		trace("WebView has been closed!");
 	}
 
 	function onURLChanging(url:String){
@@ -33,6 +36,12 @@ class SimpleExample {
 
 	function shareStuff(){
 		WebView.open('http://www.puralax.com/help',true);
+		
+		// Example using whitelist:
+		// WebView.open('http://www.puralax.com/help',true,['(http|https)://www.puralax.com/help(.*)','http://www.sempaigames.com/(.*)']);
+		
+		// Example using blacklist:
+		// WebView.open('http://www.puralax.com/help',true,null,['(http|https)://(.*)facebook.com(.*)']);
 	}
 }
 
