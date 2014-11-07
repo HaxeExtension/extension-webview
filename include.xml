@@ -8,7 +8,7 @@
 
 	<section if="ios">
 		<dependency name="UIKit.framework" />
-		<ndll name="webview" />
+		<ndll name="webviewex" />
 	</section>
 
 </extension>

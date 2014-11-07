@@ -206,6 +206,12 @@ public class WebViewActivity extends Activity {
 	public void onClosePressed(View view) {
 		finish();
 	}
+
+	@Override
+	public void finish(){
+		super.finish();
+		WebViewExtension.active=false;
+	}
 	
 	
 }
