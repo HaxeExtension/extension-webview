@@ -30,6 +30,7 @@ class WebView  {
 
 	public static function open (url: String = null, floating :Bool = false, ?urlWhitelist :Array<String>, ?urlBlacklist :Array<String>) :Void {
 		init();
+		if(urlWhitelist!=null) urlWhitelist.push(url);
 		#if android
 			_open(url, floating, urlWhitelist, urlBlacklist);
 			if(onClose!=null) checkActive();
