@@ -16,7 +16,7 @@ A minimalistic OpenFL extension for displaying native WebViews on iOS and Androi
 ###Simple use Example
 
 ```haxe
-// This example show a simple sharing of a text using the Share Classs.
+// This example show a simple sharing of a text using the Share Class.
 
 import extension.webview.WebView;
 
