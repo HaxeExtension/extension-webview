@@ -5,6 +5,6 @@
         "contributors":["fbricker"],
         "tags": ["webview","api","android", "ios"],
         "description": "WebView / OpenFL extension for Android + iOS.",
-        "version": "1.0.0",
-        "releasenote": "Enable URL WhiteList and BlackList + onClose event implementation for Android."
+        "version": "1.1.0",
+        "releasenote": "Fix build for arm64, x86_64 on iOS."
 }
