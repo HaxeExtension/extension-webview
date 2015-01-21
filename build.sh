@@ -1,7 +1,6 @@
 #!/bin/bash
 dir=`dirname "$0"`
 cd "$dir"
-project/build.sh
 rm -rf project/obj
 lime rebuild . ios
 rm -rf project/obj
