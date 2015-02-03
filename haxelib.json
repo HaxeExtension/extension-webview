@@ -1,7 +1,7 @@
 {
         "name": "openfl-webview",
         "url": "https://github.com/fbricker/openfl-webview",
-        "license": "LGPL",
+        "license": "MIT",
         "contributors":["fbricker"],
         "tags": ["webview","api","android", "ios"],
         "description": "WebView / OpenFL extension for Android + iOS.",
