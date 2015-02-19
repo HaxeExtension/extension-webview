@@ -76,11 +76,16 @@ class WebView  {
 			#if android
 			_open = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "open", "(Ljava/lang/String;Z[Ljava/lang/String;[Ljava/lang/String;)V");
 			_isActive = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "isActive", "()Z");
+
+			var _callbackFunc = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "setCallback", "(Lorg/haxe/lime/HaxeObject;)V");
+			_callbackFunc(new AndroidCallbackHelper());
+
 			#elseif ios
             APIInit     = cpp.Lib.load("webviewex","webviewAPIInit", 3);
 			APINavigate = cpp.Lib.load("webviewex","webviewAPINavigate", 1);
 			APIDestroy  = cpp.Lib.load("webviewex","webviewAPIDestroy", 0);
 			#end
+
 		}catch(e:Dynamic){
 			trace("INIT Exception: "+e);
 		}

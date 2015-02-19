@@ -1,11 +1,8 @@
 package extensions.webview;
 
-import java.util.ArrayList;
-
 import android.content.Intent;
-
 import org.haxe.extension.Extension;
-
+import org.haxe.lime.HaxeObject;
 
 public class WebViewExtension extends Extension {
 
@@ -14,6 +11,8 @@ public class WebViewExtension extends Extension {
 	public static final String EXTRA_URL_WHITELIST = "extensions.webviewex.EXTRA_URL_WHITELIST";
 	public static final String EXTRA_URL_BLACKLIST = "extensions.webviewex.EXTRA_URL_BLACKLIST";
 	public static boolean active = false;
+
+	public static HaxeObject callback;
 
 	public static void open(String url, boolean floating, String[] urlWhitelist, String[] urlBlacklist) {
 
@@ -26,10 +25,15 @@ public class WebViewExtension extends Extension {
 		
 		mainActivity.startActivity(intent);
 		active = true;
-	}
 
+	}
+	
 	public static boolean isActive(){
 		return active;
+	}
+
+	public static void setCallback(final HaxeObject _callback) {
+		callback = _callback;
 	}
 
 }

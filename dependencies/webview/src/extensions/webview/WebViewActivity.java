@@ -13,6 +13,7 @@ import android.webkit.WebView;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
+import org.haxe.lime.HaxeObject;
 
 public class WebViewActivity extends Activity {
 	
@@ -25,6 +26,7 @@ public class WebViewActivity extends Activity {
 	protected boolean floating;
 	protected String[] urlWhitelist;
 	protected String[] urlBlacklist;
+	protected HaxeObject callback;
 	
 	protected int layoutResource;
 
@@ -38,6 +40,7 @@ public class WebViewActivity extends Activity {
 		floating = getIntent().getExtras().getBoolean(WebViewExtension.EXTRA_FLOATING);
 		urlWhitelist = getIntent().getExtras().getStringArray(WebViewExtension.EXTRA_URL_WHITELIST);
 		urlBlacklist = getIntent().getExtras().getStringArray(WebViewExtension.EXTRA_URL_BLACKLIST);
+		callback = WebViewExtension.callback;
 
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
@@ -79,6 +82,8 @@ public class WebViewActivity extends Activity {
 					public boolean shouldOverrideUrlLoading (WebView view, String url) {
 						
 						Log.d(TAG, "shouldOverrideUrlLoading(): url = " + url);
+
+						callback.call("onURLChanging", new Object[] {url});
 						
 						if (WebViewActivity.this.urlWhitelist == null) {
 							
@@ -155,6 +160,7 @@ public class WebViewActivity extends Activity {
 			);
 
 			// Load the page
+			callback.call("onURLChanging", new Object[] {url});
 			webView.loadUrl(url);
 		}
 
@@ -207,6 +213,7 @@ public class WebViewActivity extends Activity {
 	}
 
 	public void onClosePressed(View view) {
+		callback.call("onClose", new Object[] {});
 		finish();
 	}
 
