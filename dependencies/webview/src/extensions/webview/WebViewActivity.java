@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.webkit.WebView;
+import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 
@@ -62,6 +63,8 @@ public class WebViewActivity extends Activity {
 		{
 			// Create the webview
 			webView = new WebView(this);
+			WebSettings webSettings = webView.getSettings();
+			webSettings.setJavaScriptEnabled(true);
 			webView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 			webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 			webView.setScrollbarFadingEnabled(true);
