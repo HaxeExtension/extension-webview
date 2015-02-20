@@ -7,7 +7,9 @@ class AndroidCallbackHelper {
 	}
 
 	public function onClose() {
-		
+		if (WebView.onClose!=null) {
+			WebView.onClose();
+		}
 	}
 
 	public function onURLChanging(url : String) {

@@ -15,8 +15,6 @@ class WebView  {
 
 	#if android
 	private static var _open :String -> Bool -> Array<String> -> Array<String> -> Void = null;
-	private static var _isActive :Void -> Bool = null;
-	private static var _poolingTimer:haxe.Timer = null;
 	#end
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,29 +29,15 @@ class WebView  {
 	public static function open (url: String = null, floating :Bool = false, ?urlWhitelist :Array<String>, ?urlBlacklist :Array<String>) :Void {
 		init();
 		if(urlWhitelist!=null) urlWhitelist.push(url);
+		
 		#if android
 			_open(url, floating, urlWhitelist, urlBlacklist);
-			if(onClose!=null) checkActive();
-		#else
+		#elseif ios
 			if (listener == null) listener = new WebViewListener(urlWhitelist, urlBlacklist);
 			APICall("init", [listener, floating]);
 			navigate(url);
 		#end
 	}
-
-	#if android
-	private static function checkActive(){
-		if(_poolingTimer==null){
-			_poolingTimer = new haxe.Timer(250);
-			_poolingTimer.run = checkActive;
-		}
-		if(!_isActive()){
-			_poolingTimer.stop();
-			_poolingTimer = null;
-			if(onClose!=null) onClose();
-		}
-	}
-	#end
 
 	#if ios
 	public static function navigate(url:String):Void {
@@ -72,11 +56,9 @@ class WebView  {
 	private static function init():Void {
 		if(initialized == true) return;
 		initialized = true;
-		try{
+		try {
 			#if android
 			_open = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "open", "(Ljava/lang/String;Z[Ljava/lang/String;[Ljava/lang/String;)V");
-			_isActive = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "isActive", "()Z");
-
 			var _callbackFunc = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "setCallback", "(Lorg/haxe/lime/HaxeObject;)V");
 			_callbackFunc(new AndroidCallbackHelper());
 
@@ -86,7 +68,7 @@ class WebView  {
 			APIDestroy  = cpp.Lib.load("webviewex","webviewAPIDestroy", 0);
 			#end
 
-		}catch(e:Dynamic){
+		} catch(e:Dynamic) {
 			trace("INIT Exception: "+e);
 		}
 	}
@@ -105,7 +87,7 @@ class WebView  {
             if (method == "callback") APISetCallback(args[0]);
             if (method == "navigate") APINavigate(args[0]);
             if (method == "destroy") APIDestroy();
-			#elseif iphone
+			#elseif ios
 			if (method == "init") APIInit(args[0].onClose, args[0].onURLChanging, args[1]);
             if (method == "navigate") APINavigate(args[0]);
             if (method == "destroy") APIDestroy();
