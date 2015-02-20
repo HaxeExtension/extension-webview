@@ -9,7 +9,7 @@ A minimalistic OpenFL extension for displaying native WebViews on iOS and Androi
 * Whitelist validation (the webview will close if the user goes to a non-whitelisted URL).
 * Blacklist validation (the webview will close if the user goes to a blacklisted URL).
 * onClose event (Android and iOS).
-* onURLChanging events for controling the WebView (iOS only).
+* onURLChanging events for controling the WebView (Android and iOS).
 * On non-supported platforms, this extensions has no effect (makes nothing).
 
 ###Simple use Example
