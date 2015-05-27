@@ -1,4 +1,4 @@
-#openfl-webview
+#extension-webview
 
 A minimalistic OpenFL extension for displaying native WebViews on iOS and Android outputs.
 
@@ -49,7 +49,7 @@ class SimpleExample {
 ###How to Install
 
 ```bash
-haxelib install openfl-webview
+haxelib install extension-webview
 ```
 
 ###License

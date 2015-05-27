@@ -1,5 +1,5 @@
 project/obj
-openfl-webview.zip
+*.zip
 *.sublime-project
 *.sublime-workspace
 *.DS_Store

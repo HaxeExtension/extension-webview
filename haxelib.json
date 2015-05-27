@@ -1,10 +1,10 @@
 {
-        "name": "openfl-webview",
-        "url": "https://github.com/fbricker/openfl-webview",
+        "name": "extension-webview",
+        "url": "https://github.com/openfl/extension-webview",
         "license": "MIT",
-        "contributors":["fbricker"],
+        "contributors":["singmajesty","fbricker"],
         "tags": ["webview","api","android", "ios"],
         "description": "WebView / OpenFL extension for Android + iOS.",
-        "version": "1.2.0",
-        "releasenote": "Enable Javascript and urlChanging events on Android."
+        "version": "1.2.1",
+        "releasenote": "Rename from openfl-webview to extension-webview."
 }
