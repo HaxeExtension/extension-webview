@@ -15,6 +15,9 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import org.haxe.lime.HaxeObject;
 
+import android.webkit.CookieSyncManager;
+import android.webkit.CookieManager;
+
 public class WebViewActivity extends Activity {
 	
 	private static final String TAG = "WebViewActivity";
@@ -39,9 +42,9 @@ public class WebViewActivity extends Activity {
 		url = getIntent().getExtras().getString(WebViewExtension.EXTRA_URL);
 		floating = getIntent().getExtras().getBoolean(WebViewExtension.EXTRA_FLOATING);
 		urlWhitelist = getIntent().getExtras().getStringArray(WebViewExtension.EXTRA_URL_WHITELIST);
-		urlBlacklist = getIntent().getExtras().getStringArray(WebViewExtension.EXTRA_URL_BLACKLIST);
+		urlBlacklist = getIntent().getExtras().getStringArray(WebViewExtension.EXTRA_URL_BLACKLIST);		
 		callback = WebViewExtension.callback;
-
+		
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
 		if (floating)
@@ -73,6 +76,11 @@ public class WebViewActivity extends Activity {
 			webView.setScrollbarFadingEnabled(true);
 			webView.getSettings().setLoadsImagesAutomatically(true);
 			
+			// Remove all cookies when invoking the OPEN call [KDS]
+			CookieSyncManager.createInstance(this);         
+			CookieManager cookieManager = CookieManager.getInstance();        
+			cookieManager.removeAllCookie();
+						
 			// Add the callback to handle new page loads
 			webView.setWebViewClient(
 				
@@ -163,6 +171,12 @@ public class WebViewActivity extends Activity {
 			callback.call("onURLChanging", new Object[] {url});
 			webView.loadUrl(url);
 		}
+		
+		// auto-clear all cache/disk files - not doing anything :-(
+		webView.clearCache(true);
+		
+		// clearFormData - not doing anything :-(
+		webView.clearFormData();
 
 		// Attach the WebView to its placeholder
 		webViewPlaceholder.addView(webView);
@@ -222,6 +236,5 @@ public class WebViewActivity extends Activity {
 		super.finish();
 		WebViewExtension.active=false;
 	}
-	
-	
+		
 }

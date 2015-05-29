@@ -13,11 +13,11 @@ public class WebViewExtension extends Extension {
 	public static boolean active = false;
 
 	public static HaxeObject callback;
-
-	public static void open(String url, boolean floating, String[] urlWhitelist, String[] urlBlacklist) {
-
+	
+	public static void open(String url, boolean floating, String[] urlWhitelist, String[] urlBlacklist) 
+	{
 		Intent intent = new Intent(mainActivity, WebViewActivity.class);
-
+	
 		intent.putExtra(EXTRA_URL, url);
 		intent.putExtra(EXTRA_FLOATING, floating);
 		intent.putExtra(EXTRA_URL_WHITELIST, urlWhitelist);
@@ -25,7 +25,6 @@ public class WebViewExtension extends Extension {
 		
 		mainActivity.startActivity(intent);
 		active = true;
-
 	}
 	
 	public static boolean isActive(){
