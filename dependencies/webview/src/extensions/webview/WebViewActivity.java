@@ -71,81 +71,84 @@ public class WebViewActivity extends Activity {
 			webView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 			webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 			webView.setScrollbarFadingEnabled(true);
-			webView.getSettings().setLoadsImagesAutomatically(true);
-			
+            webSettings.setLoadsImagesAutomatically(true);
+            webSettings.setUseWideViewPort(true);
+            if (android.os.Build.VERSION.SDK_INT > 16)
+                webSettings.setMediaPlaybackRequiresUserGesture(false);
+
 			// Add the callback to handle new page loads
 			webView.setWebViewClient(
-				
+
 				new WebViewClient() {
-					
+
 					@Override
 					public boolean shouldOverrideUrlLoading (WebView view, String url) {
-						
+
 						Log.d(TAG, "shouldOverrideUrlLoading(): url = " + url);
 
 						callback.call("onURLChanging", new Object[] {url});
-						
+
 						if (WebViewActivity.this.urlWhitelist == null) {
-							
+
 							Log.d(TAG, "urlWhitelist is null");
-							
+
 						} else if (WebViewActivity.this.urlWhitelist.length == 0) {
 
 							Log.d(TAG, "urlWhitelist is empty");
 
 						} else {
-							
+
 							boolean whitelisted = false;
-							
+
 							for (String whitelistedUrl : WebViewActivity.this.urlWhitelist) {
-							
+
 								try {
-	
+
 									if (url.matches(whitelistedUrl)) {
-										
+
 										Log.d(TAG, "URL matches with whitelist entry: '" + whitelistedUrl + "'.");
 										whitelisted = true;
-										
+
 									}
-																	
+
 								} catch (PatternSyntaxException ex) {
-									
+
 									Log.e(TAG, "Regular expression '" + whitelistedUrl + "' is not valid.");
-									
+
 								}
-								
+
 							}
-							
+
 							if (! whitelisted) {
-							
+
 								Log.d(TAG, "URL is not whitelisted. Closing view...");
 								// call onClose( with args ) ???
 								finish();
 								return true;
-								
+
 							}
-							
+
 						}
-						
+
 						if (WebViewActivity.this.urlBlacklist == null) {
-							
+
 							Log.d(TAG, "urlBlacklist is null");
-							
+
 						} else for (String blacklistedUrl : WebViewActivity.this.urlBlacklist) {
-							
+
 							try {
-							
+
 								if (url.matches(blacklistedUrl)) {
-									
+
 									Log.d(TAG, "URL matches with blacklist entry: '" + blacklistedUrl + "'. Closing view...");
 									// call onClose( with args ) ???
 									finish();
 									return true;
-									
+
 								}
-								
+
 							} catch (PatternSyntaxException ex) {
-								
+
 								Log.e(TAG, "Regular expression '" + blacklistedUrl + "' is not valid.");
 								
 							}
