@@ -60,7 +60,7 @@ class WebView  {
 			#if android
 			_open = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "open", "(Ljava/lang/String;Z[Ljava/lang/String;[Ljava/lang/String;)V");
 			var _callbackFunc = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "setCallback", "(Lorg/haxe/lime/HaxeObject;)V");
-			_callbackFunc(new AndroidCallbackHelper());
+            _callbackFunc(WebView);
 
 			#elseif ios
             APIInit     = cpp.Lib.load("webviewex","webviewAPIInit", 3);
@@ -124,7 +124,7 @@ class WebViewListener {
 		return false;
 	}
 	
-	public function onURLChanging(url:Dynamic):Void {	
+	public function onURLChanging(url:Dynamic):Void {
 		if(urlWhitelist!=null){	
 			if(!find(urlWhitelist,url)){
 				WebView.close();
