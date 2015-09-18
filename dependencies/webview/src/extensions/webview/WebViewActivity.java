@@ -26,6 +26,8 @@ public class WebViewActivity extends Activity {
 	protected boolean floating;
 	protected String[] urlWhitelist;
 	protected String[] urlBlacklist;
+	protected boolean useWideViewPort;
+	protected boolean mediaPlaybackRequiresUserGesture;
 	protected HaxeObject callback;
 	
 	protected int layoutResource;
@@ -36,18 +38,22 @@ public class WebViewActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		// Load parameters from intent
-		url = getIntent().getExtras().getString(WebViewExtension.EXTRA_URL);
-		floating = getIntent().getExtras().getBoolean(WebViewExtension.EXTRA_FLOATING);
-		urlWhitelist = getIntent().getExtras().getStringArray(WebViewExtension.EXTRA_URL_WHITELIST);
-		urlBlacklist = getIntent().getExtras().getStringArray(WebViewExtension.EXTRA_URL_BLACKLIST);
+		Bundle extras = getIntent().getExtras();
+		url = extras.getString(WebViewExtension.EXTRA_URL);
+		floating = extras.getBoolean(WebViewExtension.EXTRA_FLOATING);
+		urlWhitelist = extras.getStringArray(WebViewExtension.EXTRA_URL_WHITELIST);
+		urlBlacklist = extras.getStringArray(WebViewExtension.EXTRA_URL_BLACKLIST);
+		useWideViewPort = extras.getBoolean(WebViewExtension.EXTRA_USE_WIDE_PORT);
+		mediaPlaybackRequiresUserGesture = extras.getBoolean(WebViewExtension.EXTRA_MEDIA_PLAYBACK_REQUIRES_USER_GESTURE);
 		callback = WebViewExtension.callback;
 
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
-		if (floating)
+		if (floating) {
 			layoutResource = R.layout.activity_web_view_floating;
-		else
+		} else {
 			layoutResource = R.layout.activity_web_view_fullscreen;
+		}
 		
 		// Initialize the UI
 		initUI();
@@ -71,7 +77,13 @@ public class WebViewActivity extends Activity {
 			webView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 			webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 			webView.setScrollbarFadingEnabled(true);
-			webView.getSettings().setLoadsImagesAutomatically(true);
+			webSettings.setLoadsImagesAutomatically(true);
+
+			webSettings.setUseWideViewPort(useWideViewPort);
+			if (android.os.Build.VERSION.SDK_INT>16) {
+				//TODO: need to call this using reflection
+				//webSettings.setMediaPlaybackRequiresUserGesture(mediaPlaybackRequiresUserGesture);
+			}
 			
 			// Add the callback to handle new page loads
 			webView.setWebViewClient(
