@@ -52,6 +52,10 @@ class SimpleExample {
 haxelib install extension-webview
 ```
 
+###Thanks to...
+
+The original iOS implementation is based on Suat Eyrice's extension NME WebView (https://github.com/SuatEyrice/NMEWebview).
+
 ###License
 
 The MIT License (MIT) - [LICENSE.md](LICENSE.md)
