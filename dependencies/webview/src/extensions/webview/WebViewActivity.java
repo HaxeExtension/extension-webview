@@ -74,6 +74,7 @@ public class WebViewActivity extends Activity {
 			webView = new WebView(this);
 			WebSettings webSettings = webView.getSettings();
 			webSettings.setJavaScriptEnabled(true);
+			webSettings.setDomStorageEnabled(true);
 			webView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 			webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 			webView.setScrollbarFadingEnabled(true);

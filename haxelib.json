@@ -1,10 +1,10 @@
 {
-        "name": "extension-webview",
-        "url": "https://github.com/openfl/extension-webview",
-        "license": "MIT",
-        "contributors":["singmajesty","fbricker"],
-        "tags": ["webview","api","android", "ios"],
-        "description": "WebView / OpenFL extension for Android + iOS.",
-        "version": "1.2.1",
-        "releasenote": "Rename from openfl-webview to extension-webview."
+	"name": "extension-webview",
+	"url": "https://github.com/openfl/extension-webview",
+	"license": "MIT",
+	"contributors":["singmajesty","fbricker"],
+	"tags": ["webview","api","android", "ios"],
+	"description": "WebView / OpenFL extension for Android + iOS.",
+	"version": "1.2.2",
+	"releasenote": "Enable Dom Storage on Android"
 }
