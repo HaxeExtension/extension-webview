@@ -10,6 +10,7 @@ class WebView  {
 	private static var APISetCallback:Dynamic=null;
 	private static var APINavigate:Dynamic=null;
 	private static var APIDestroy:Dynamic=null;
+	private static var APILoadHtml:Dynamic=null;
 	
 	#if ios
 	private static var listener:WebViewListener;
@@ -63,6 +64,12 @@ class WebView  {
 	}
 
 	#if ios
+	public static function openHtml(html:String, floating:Bool=false){
+		if (listener == null) listener = new WebViewListener(null, null);
+		APICall("init", [listener, floating]);
+		APICall("loadHtml", [html]);
+	}
+
 	public static function navigate(url:String):Void {
 		if (url==null) return;
 		if (listener != null) APICall("navigate", [url]);
@@ -88,6 +95,7 @@ class WebView  {
 			#elseif ios
             APIInit     = cpp.Lib.load("webviewex","webviewAPIInit", 3);
 			APINavigate = cpp.Lib.load("webviewex","webviewAPINavigate", 1);
+			APILoadHtml  = cpp.Lib.load("webviewex","webviewAPILoadHtml", 1);
 			APIDestroy  = cpp.Lib.load("webviewex","webviewAPIDestroy", 0);
 			#end
 
@@ -113,6 +121,7 @@ class WebView  {
 			#elseif ios
 			if (method == "init") APIInit(args[0].onClose, args[0].onURLChanging, args[1]);
             if (method == "navigate") APINavigate(args[0]);
+            if (method == "loadHtml") APILoadHtml(args[0]);
             if (method == "destroy") APIDestroy();
 			#end
 		} catch(e:Dynamic) {

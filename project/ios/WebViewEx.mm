@@ -81,6 +81,12 @@ namespace webviewex {
 		[instance loadRequest:req];
 	}
 
+	void loadHtml (const char *html){
+		[instance loadHTMLString:[NSString stringWithUTF8String:html] baseURL: nil];
+    	instance.allowsInlineMediaPlayback = YES;
+    	instance.mediaPlaybackRequiresUserAction = NO;
+	}
+
 	void destroy(){
 		if(instance==nil) return;
 		val_call0(onDestroyedCallback->get());
