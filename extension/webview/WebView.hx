@@ -18,6 +18,7 @@ class WebView  {
 
 	#if android
 	private static var _open :String -> Void = null;
+	private static var _openHtml :String -> Void = null;
 	#end
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,13 +64,29 @@ class WebView  {
 		#end
 	}
 
-	#if ios
-	public static function openHtml(html:String, floating:Bool=false){
-		if (listener == null) listener = new WebViewListener(null, null);
-		APICall("init", [listener, floating]);
-		APICall("loadHtml", [html]);
+	public static function openHtml(
+		html:String, 
+		floating:Bool=false,
+		?useWideViewPort :Bool = false,						// Android only
+		?mediaPlaybackRequiresUserGesture :Bool = true		// Android only
+	) :Void {
+		init();
+		#if android
+			var obj = {
+				html : html,
+				floating : floating,
+				useWideViewPort : useWideViewPort,
+				mediaPlaybackRequiresUserGesture : mediaPlaybackRequiresUserGesture
+			}
+			_openHtml(Json.stringify(obj));
+		#elseif ios
+			if (listener == null) listener = new WebViewListener(null, null);
+			APICall("init", [listener, floating]);
+			APICall("loadHtml", [html]);
+		#end
 	}
 
+	#if ios
 	public static function navigate(url:String):Void {
 		if (url==null) return;
 		if (listener != null) APICall("navigate", [url]);
@@ -89,6 +106,7 @@ class WebView  {
 		try {
 			#if android
 			_open = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "open", "(Ljava/lang/String;)V");
+			_openHtml = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "openHtml", "(Ljava/lang/String;)V");
 			var _callbackFunc = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "setCallback", "(Lorg/haxe/lime/HaxeObject;)V");
 			_callbackFunc(new AndroidCallbackHelper());
 
