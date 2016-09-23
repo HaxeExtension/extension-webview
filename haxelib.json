@@ -5,6 +5,6 @@
 	"contributors":["singmajesty","fbricker"],
 	"tags": ["webview","api","android", "ios"],
 	"description": "WebView / OpenFL extension for Android + iOS.",
-	"version": "1.2.2",
-	"releasenote": "Enable Dom Storage on Android"
+	"version": "1.2.3",
+	"releasenote": "Add openHtml methods + small bugfixes"
 }

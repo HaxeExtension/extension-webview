@@ -237,6 +237,9 @@ public class WebViewActivity extends Activity {
 	public void finish(){
 		super.finish();
 		WebViewExtension.active=false;
+		webView.clearHistory();
+		webView.loadUrl("about:blank");
+		webViewPlaceholder.removeView(webView);
 	}
 	
 	
