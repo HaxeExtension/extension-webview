@@ -23,6 +23,7 @@ public class WebViewActivity extends Activity {
 	protected WebView webView;
 	
 	protected String url;
+	protected String html;
 	protected boolean floating;
 	protected String[] urlWhitelist;
 	protected String[] urlBlacklist;
@@ -39,7 +40,8 @@ public class WebViewActivity extends Activity {
 		
 		// Load parameters from intent
 		Bundle extras = getIntent().getExtras();
-		url = extras.getString(WebViewExtension.EXTRA_URL);
+		url = extras.getString(WebViewExtension.EXTRA_URL, "about:blank");
+		html = extras.getString(WebViewExtension.EXTRA_HTML, "null");
 		floating = extras.getBoolean(WebViewExtension.EXTRA_FLOATING);
 		urlWhitelist = extras.getStringArray(WebViewExtension.EXTRA_URL_WHITELIST);
 		urlBlacklist = extras.getStringArray(WebViewExtension.EXTRA_URL_BLACKLIST);
@@ -174,7 +176,8 @@ public class WebViewActivity extends Activity {
 
 			// Load the page
 			callback.call("onURLChanging", new Object[] {url});
-			webView.loadUrl(url);
+			if(url=="about:blank" && html!="null") webView.loadData(html, "text/html", null);
+			else webView.loadUrl(url);
 		}
 
 		// Attach the WebView to its placeholder

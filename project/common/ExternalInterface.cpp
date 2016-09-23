@@ -25,5 +25,8 @@ DEFINE_PRIM (webviewAPIInit, 3);
 void webviewAPINavigate (value url) { navigate(val_string(url)); }
 DEFINE_PRIM (webviewAPINavigate, 1);
 
+void webviewAPILoadHtml (value html) { loadHtml(val_string(html)); }
+DEFINE_PRIM (webviewAPILoadHtml, 1);
+
 void webviewAPIDestroy(){ destroy(); }
 DEFINE_PRIM (webviewAPIDestroy, 0);

@@ -10,6 +10,7 @@ class WebView  {
 	private static var APISetCallback:Dynamic=null;
 	private static var APINavigate:Dynamic=null;
 	private static var APIDestroy:Dynamic=null;
+	private static var APILoadHtml:Dynamic=null;
 	
 	#if ios
 	private static var listener:WebViewListener;
@@ -17,6 +18,7 @@ class WebView  {
 
 	#if android
 	private static var _open :String -> Void = null;
+	private static var _openHtml :String -> Void = null;
 	#end
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,6 +64,28 @@ class WebView  {
 		#end
 	}
 
+	public static function openHtml(
+		html:String, 
+		floating:Bool=false,
+		?useWideViewPort :Bool = false,						// Android only
+		?mediaPlaybackRequiresUserGesture :Bool = true		// Android only
+	) :Void {
+		init();
+		#if android
+			var obj = {
+				html : html,
+				floating : floating,
+				useWideViewPort : useWideViewPort,
+				mediaPlaybackRequiresUserGesture : mediaPlaybackRequiresUserGesture
+			}
+			_openHtml(Json.stringify(obj));
+		#elseif ios
+			if (listener == null) listener = new WebViewListener(null, null);
+			APICall("init", [listener, floating]);
+			APICall("loadHtml", [html]);
+		#end
+	}
+
 	#if ios
 	public static function navigate(url:String):Void {
 		if (url==null) return;
@@ -82,12 +106,14 @@ class WebView  {
 		try {
 			#if android
 			_open = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "open", "(Ljava/lang/String;)V");
+			_openHtml = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "openHtml", "(Ljava/lang/String;)V");
 			var _callbackFunc = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "setCallback", "(Lorg/haxe/lime/HaxeObject;)V");
 			_callbackFunc(new AndroidCallbackHelper());
 
 			#elseif ios
             APIInit     = cpp.Lib.load("webviewex","webviewAPIInit", 3);
 			APINavigate = cpp.Lib.load("webviewex","webviewAPINavigate", 1);
+			APILoadHtml  = cpp.Lib.load("webviewex","webviewAPILoadHtml", 1);
 			APIDestroy  = cpp.Lib.load("webviewex","webviewAPIDestroy", 0);
 			#end
 
@@ -113,6 +139,7 @@ class WebView  {
 			#elseif ios
 			if (method == "init") APIInit(args[0].onClose, args[0].onURLChanging, args[1]);
             if (method == "navigate") APINavigate(args[0]);
+            if (method == "loadHtml") APILoadHtml(args[0]);
             if (method == "destroy") APIDestroy();
 			#end
 		} catch(e:Dynamic) {
