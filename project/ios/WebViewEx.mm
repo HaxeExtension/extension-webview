@@ -67,14 +67,16 @@ namespace webviewex {
 
         //instance.scrollView.bounces = NO;
 
-
-        UIImage *backgroundImage = [[UIImage alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @"assets/assets/background2.png" ofType: nil]];
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:backgroundImage];
-        imageView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
-        imageView.contentMode = UIViewContentModeScaleToFill;
-        imageView.frame = instance.bounds;
-        [instance insertSubview:imageView atIndex:0];
-
+        NSString *path = [[NSBundle mainBundle] pathForResource: @"assets/assets/webview/background.png" ofType: nil];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:path])
+        {
+            UIImage *backgroundImage = [[UIImage alloc] initWithContentsOfFile: path];
+            UIImageView *imageView = [[UIImageView alloc] initWithImage:backgroundImage];
+            imageView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
+            imageView.contentMode = UIViewContentModeScaleToFill;
+            imageView.frame = instance.bounds;
+            [instance insertSubview:imageView atIndex:0];
+        }
 
 		[[[UIApplication sharedApplication] keyWindow] addSubview:instance];
 		
