@@ -61,6 +61,16 @@ namespace webviewex {
         instance = [[UIWebView alloc] initWithFrame:CGRectMake(padding, padding, screen.size.width - (padding * 2), screen.size.height - (padding * 2))];
 		instance.delegate = webViewDelegate;
 		instance.scalesPageToFit=YES;
+        //instance.scrollView.bounces = NO;
+
+
+        UIImage *backgroundImage = [[UIImage alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @"assets/assets/background2.png" ofType: nil]];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:backgroundImage];
+        imageView.autoresizingMask = (UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth);
+        imageView.contentMode = UIViewContentModeScaleToFill;
+        imageView.frame = instance.bounds;
+        [instance insertSubview:imageView atIndex:0];
+
 
 		[[[UIApplication sharedApplication] keyWindow] addSubview:instance];
 		
