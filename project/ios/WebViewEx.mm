@@ -61,6 +61,10 @@ namespace webviewex {
         instance = [[UIWebView alloc] initWithFrame:CGRectMake(padding, padding, screen.size.width - (padding * 2), screen.size.height - (padding * 2))];
 		instance.delegate = webViewDelegate;
 		instance.scalesPageToFit=YES;
+        
+        [instance setBackgroundColor:[UIColor clearColor]];
+        [instance setOpaque:NO];
+
         //instance.scrollView.bounces = NO;
 
 
