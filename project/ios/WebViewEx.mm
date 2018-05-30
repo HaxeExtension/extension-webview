@@ -58,15 +58,31 @@ namespace webviewex {
         padding /= 4;
         if(!withPopup) padding = 0;
         
-        instance = [[UIWebView alloc] initWithFrame:CGRectMake(padding, padding, screen.size.width - (padding * 2), screen.size.height - (padding * 2))];
+        instance = [[UIWebView alloc] initWithFrame:CGRectMake(padding, padding + screen.size.height, screen.size.width - (padding * 2), screen.size.height - (padding * 2))];
 		instance.delegate = webViewDelegate;
 		instance.scalesPageToFit=YES;
         
+        //instance.scrollView.bounces = NO;
         [instance setBackgroundColor:[UIColor clearColor]];
         [instance setOpaque:NO];
 
-        //instance.scrollView.bounces = NO;
+        // Reset cache
+        [[NSURLCache sharedURLCache] removeAllCachedResponses];
+        [[NSURLCache sharedURLCache] setDiskCapacity:0];
+        [[NSURLCache sharedURLCache] setMemoryCapacity:0];
 
+        // Transition from bottom to top
+        [UIView animateWithDuration: 0.3
+            delay: 0.0
+            options: UIViewAnimationOptionCurveEaseOut
+            animations:^{
+                instance.frame = CGRectMake(padding, padding, screen.size.width - (padding * 2), screen.size.height - (padding * 2));
+            } 
+            completion:^(BOOL finished){
+        }];
+
+        [[[UIApplication sharedApplication] keyWindow] addSubview:instance];
+        
         NSString *path = [[NSBundle mainBundle] pathForResource: @"assets/assets/webview/background.png" ofType: nil];
         if ([[NSFileManager defaultManager] fileExistsAtPath:path])
         {
@@ -78,16 +94,17 @@ namespace webviewex {
             [instance insertSubview:imageView atIndex:0];
         }
 
-		[[[UIApplication sharedApplication] keyWindow] addSubview:instance];
 		
-        if (withPopup) {
-        	UIImage *closeImage = [[UIImage alloc] initWithContentsOfFile: [[NSBundle mainBundle] pathForResource: [NSString stringWithFormat:@"assets/assets/extensions_webview_close_%@.png", dpi] ofType: nil]];
+        path = [[NSBundle mainBundle] pathForResource: @"assets/assets/webview/close.png" ofType: nil];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+        	UIImage *closeImage = [[UIImage alloc] initWithContentsOfFile: path];
 			closeButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			[closeButton setImage:closeImage forState:UIControlStateNormal];
 			closeButton.adjustsImageWhenHighlighted = NO;
-			closeButton.frame = CGRectMake(0, 0, padding*2, padding*2);
+			closeButton.frame = CGRectMake(screen.size.width - 44 - 8, 8, 44, 44);
 			[closeButton addTarget:webViewDelegate action:@selector(onCloseButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
-			[[[UIApplication sharedApplication] keyWindow] addSubview:closeButton];
+			//[[[UIApplication sharedApplication] keyWindow] addSubview:closeButton];
+            [instance addSubview:closeButton];
         }
 	}
     
@@ -107,12 +124,28 @@ namespace webviewex {
 		if(instance==nil) return;
 		val_call0(onDestroyedCallback->get());
 		[instance stopLoading];
-		[instance removeFromSuperview];
-		if(closeButton != nil) {
-			[closeButton removeFromSuperview];
-		}
-		[instance release];
-		instance=nil;
+
+        CGRect screen = [[UIScreen mainScreen] bounds];
+        int padding = 0;
+
+        // Transition from top to bottom
+        UIWebView *localInstance = instance;
+        [UIView animateWithDuration: 0.2
+            delay: 0.0
+            options: UIViewAnimationOptionCurveEaseIn
+            animations:^{
+                localInstance.frame = CGRectMake(padding, padding + screen.size.height, screen.size.width - (padding * 2), screen.size.height - (padding * 2));
+            }
+            completion:^(BOOL finished){
+            if (finished) {
+                [localInstance removeFromSuperview];
+                if(closeButton != nil) {
+                    [closeButton removeFromSuperview];
+                }
+                [localInstance release];
+            }
+        }];
+        instance=nil;
 	}
 	
 	void onUrlChanging (NSString *url) {
