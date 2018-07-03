@@ -24,6 +24,7 @@ typedef void (*OnCloseClickedFunctionType)();
 @end
 
 namespace webviewex {
+    BOOL hasCloseButton = NO;
 	UIWebView *instance;
 	UIButton *closeButton;
 	WebViewDelegate *webViewDelegate;
@@ -105,11 +106,13 @@ namespace webviewex {
 			[closeButton addTarget:webViewDelegate action:@selector(onCloseButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
 			//[[[UIApplication sharedApplication] keyWindow] addSubview:closeButton];
             [instance addSubview:closeButton];
+
+            hasCloseButton = YES;
         }
 	}
     
 	void navigate (const char *url) {
-		NSURL *_url = [[NSURL alloc] initWithString: [[NSString alloc] initWithUTF8String:url]];
+		NSURL *_url = [[NSURL alloc] initWithString: [NSString stringWithFormat:@"%@%@", [[NSString alloc] initWithUTF8String:url], hasCloseButton ? @"?app=1" : @""]];
 		NSURLRequest *req = [[NSURLRequest alloc] initWithURL:_url];
 		[instance loadRequest:req];
 	}
