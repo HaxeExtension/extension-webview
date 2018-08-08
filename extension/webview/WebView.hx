@@ -18,6 +18,7 @@ class WebView  {
 
 	#if android
 	private static var _open :String -> Void = null;
+	private static var _close :Void -> Void = null;
 	private static var _openHtml :String -> Void = null;
 	#end
 
@@ -106,6 +107,7 @@ class WebView  {
 		try {
 			#if android
 			_open = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "open", "(Ljava/lang/String;)V");
+			_close = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "close", "()V");
 			_openHtml = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "openHtml", "(Ljava/lang/String;)V");
 			var _callbackFunc = openfl.utils.JNI.createStaticMethod("extensions/webview/WebViewExtension", "setCallback", "(Lorg/haxe/lime/HaxeObject;)V");
 			_callbackFunc(new AndroidCallbackHelper());

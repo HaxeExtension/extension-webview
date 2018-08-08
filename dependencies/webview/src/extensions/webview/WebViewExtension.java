@@ -21,6 +21,10 @@ public class WebViewExtension extends Extension {
 
 	public static HaxeObject callback;
 
+    public static void close() {
+        mainActivity.finish();
+    }
+
 	public static void open(String json) {
 
 		try {
