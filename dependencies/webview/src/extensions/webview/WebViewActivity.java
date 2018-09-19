@@ -77,12 +77,13 @@ public class WebViewActivity extends Activity {
 			WebSettings webSettings = webView.getSettings();
 			webSettings.setJavaScriptEnabled(true);
 			webSettings.setDomStorageEnabled(true);
+            webSettings.setLoadWithOverviewMode(true); 
 			webView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 			webView.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
 			webView.setScrollbarFadingEnabled(true);
 			webSettings.setLoadsImagesAutomatically(true);
-
-			webSettings.setUseWideViewPort(useWideViewPort);
+            
+			webSettings.setUseWideViewPort(true);
 			if (android.os.Build.VERSION.SDK_INT>16) {
 				//TODO: need to call this using reflection
 				//webSettings.setMediaPlaybackRequiresUserGesture(mediaPlaybackRequiresUserGesture);
@@ -100,6 +101,14 @@ public class WebViewActivity extends Activity {
 
 						callback.call("onURLChanging", new Object[] {url});
 						
+                        if (url.equals("mino://close")) {
+                        
+                            Log.d(TAG, "Closing view...");
+                            // call onClose( with args ) ???
+                            finish();
+                            return true;
+                        }
+
 						if (WebViewActivity.this.urlWhitelist == null) {
 							
 							Log.d(TAG, "urlWhitelist is null");
