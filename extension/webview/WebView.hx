@@ -39,9 +39,15 @@ class WebView  {
 		?useWideViewPort :Bool = false,						// Android only
 		?mediaPlaybackRequiresUserGesture :Bool = true		// Android only
 	) :Void {
+		if (onClose != null) return;
+		
 		init();
 		if(urlWhitelist!=null) urlWhitelist.push(url);
 		
+		onClose = function() {
+			onClose = null;
+		}
+
 		#if android
 			if (urlWhitelist==null) {
 				urlWhitelist = [];
