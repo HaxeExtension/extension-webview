@@ -19,8 +19,8 @@ extern "C" {
     }
 }
 
-void webviewAPIInit (value _onDestroyedCallback, value _onURLChangingCallback, value withPopup) { init(_onDestroyedCallback, _onURLChangingCallback, val_bool(withPopup)); }
-DEFINE_PRIM (webviewAPIInit, 3);
+void webviewAPIInit (value _onDestroyedCallback, value _onURLChangingCallback, value withPopup, value wait) { init(_onDestroyedCallback, _onURLChangingCallback, val_bool(withPopup), val_bool(wait)); }
+DEFINE_PRIM (webviewAPIInit, 4);
 
 void webviewAPINavigate (value url) { navigate(val_string(url)); }
 DEFINE_PRIM (webviewAPINavigate, 1);
