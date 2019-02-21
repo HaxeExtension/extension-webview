@@ -4,14 +4,17 @@
 
 typedef void (*OnUrlChangingFunctionType)(NSString *);
 typedef void (*OnCloseClickedFunctionType)();
+typedef void (^OnFinishLoadingFunctionType)();
 
 @interface WebViewDelegate : NSObject <UIWebViewDelegate>
 @property (nonatomic) OnUrlChangingFunctionType onUrlChanging;
 @property (nonatomic) OnCloseClickedFunctionType onCloseClicked;
+@property (nonatomic) OnFinishLoadingFunctionType onFinishLoading;
 @end
 
 @implementation WebViewDelegate
 @synthesize onUrlChanging;
+@synthesize onFinishLoading;
 @synthesize onCloseClicked;
 - (BOOL)webView:(UIWebView *)instance shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 	onUrlChanging([[request URL] absoluteString]);
@@ -20,6 +23,10 @@ typedef void (*OnCloseClickedFunctionType)();
 }
 - (void) onCloseButtonClicked:(UIButton *)closeButton {
     onCloseClicked();
+}
+- (void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    onFinishLoading();
 }
 @end
 
@@ -60,7 +67,20 @@ namespace webviewex {
         if(!withPopup) padding = 0;
         
         instance = [[UIWebView alloc] initWithFrame:CGRectMake(padding, padding + screen.size.height, screen.size.width - (padding * 2), screen.size.height - (padding * 2))];
-		instance.delegate = webViewDelegate;
+		
+        webViewDelegate.onFinishLoading = ^{
+            // Transition from bottom to top
+            [UIView animateWithDuration: 0.3
+                delay: 0.0
+                options: UIViewAnimationOptionCurveEaseOut
+                animations:^{
+                    instance.frame = CGRectMake(padding, padding, screen.size.width - (padding * 2), screen.size.height - (padding * 2));
+                } 
+                completion:^(BOOL finished){
+            }];
+        };
+        
+        instance.delegate = webViewDelegate;
 		instance.scalesPageToFit=YES;
         
         //instance.scrollView.bounces = NO;
@@ -71,16 +91,6 @@ namespace webviewex {
         [[NSURLCache sharedURLCache] removeAllCachedResponses];
         [[NSURLCache sharedURLCache] setDiskCapacity:0];
         [[NSURLCache sharedURLCache] setMemoryCapacity:0];
-
-        // Transition from bottom to top
-        [UIView animateWithDuration: 0.3
-            delay: 0.0
-            options: UIViewAnimationOptionCurveEaseOut
-            animations:^{
-                instance.frame = CGRectMake(padding, padding, screen.size.width - (padding * 2), screen.size.height - (padding * 2));
-            } 
-            completion:^(BOOL finished){
-        }];
 
         [[[UIApplication sharedApplication] keyWindow] addSubview:instance];
         
@@ -145,7 +155,7 @@ namespace webviewex {
                 if(closeButton != nil) {
                     [closeButton removeFromSuperview];
                 }
-                [localInstance release];
+                //[localInstance release];
             }
         }];
         instance=nil;

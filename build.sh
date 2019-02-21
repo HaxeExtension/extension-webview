@@ -1,8 +1,17 @@
 #!/bin/bash
-dir=`dirname "$0"`
-cd "$dir"
-rm -rf project/obj
-lime rebuild . ios
-rm -rf project/obj
-rm -f extension-webview.zip
-zip -r extension-webview.zip extension dependencies assets haxelib.json include.xml project ndll android 
+if [ -d "ndll" ]; then
+    rm -r ndll
+fi
+if [ -d "native/obj" ]; then
+    rm -r native/obj
+fi
+
+(cd project && haxelib run hxcpp Build.xml -Diphoneos -DHXCPP_ARM   -DHXCPP_CLANG -DOBJC_ARC $1)
+(cd project && haxelib run hxcpp Build.xml -Diphoneos -DHXCPP_ARMV7 -DHXCPP_CLANG -DOBJC_ARC $1)
+(cd project && haxelib run hxcpp Build.xml -Diphoneos -DHXCPP_ARM64 -DHXCPP_CLANG -DOBJC_ARC $1)
+(cd project && haxelib run hxcpp Build.xml -Diphonesim -DHXCPP_CPP11 -DHXCPP_CLANG -DOBJC_ARC $1)
+(cd project && haxelib run hxcpp Build.xml -Diphonesim -DHXCPP_CPP11 -DHXCPP_M64 -DHXCPP_CLANG -DOBJC_ARC $1)
+
+if [ -d "native/obj" ]; then
+    rm -r native/obj
+fi
