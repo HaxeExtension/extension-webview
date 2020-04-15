@@ -1,8 +1,8 @@
-#extension-webview
+# extension-webview
 
 A minimalistic OpenFL extension for displaying native WebViews on iOS and Android outputs.
 
-###Main Features
+### Main Features
 
 * Full-screen and Popup mode.
 * Popup mode has a close button on the top-left corner.
@@ -12,7 +12,7 @@ A minimalistic OpenFL extension for displaying native WebViews on iOS and Androi
 * onURLChanging events for controling the WebView (Android and iOS).
 * On non-supported platforms, this extensions has no effect (makes nothing).
 
-###Simple use Example
+### Simple use Example
 
 ```haxe
 // This example show a simple sharing of a text using the Share Class.
@@ -46,17 +46,17 @@ class SimpleExample {
 
 ```
 
-###How to Install
+### How to Install
 
 ```bash
 haxelib install extension-webview
 ```
 
-###Thanks to...
+### Thanks to...
 
 The original iOS implementation is based on Suat Eyrice's extension NME WebView (https://github.com/SuatEyrice/NMEWebview).
 
-###License
+### License
 
 The MIT License (MIT) - [LICENSE.md](LICENSE.md)
 
